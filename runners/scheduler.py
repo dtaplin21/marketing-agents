@@ -6,55 +6,60 @@ import asyncio
 from aiohttp import web
 import logging
 
-from agents.market_research import MarketResearchAgent
-from agents.audience_segmentation import AudienceSegmentationAgent
-# ... import other agents
+from agents import (
+    MarketResearchAgent,
+    AudienceSegmentationAgent,
+    ContentCreationAgent,
+    SocialPostingAgent,
+    OrderAggregationAgent,
+    AnalyticsOptimizationAgent,
+    CustomerSupportAgent,
+    CodeHealthAgent
+)
+
+# Initialize agents at module level for webhook access
+order_aggregation_agent = None
+code_health_agent = None
 
 async def setup_scheduler():
+    global order_aggregation_agent, code_health_agent
+    
     # Load config
     with open('config.yaml', 'r') as f:
         config = yaml.safe_load(f)
 
+    # Initialize agents
+    order_aggregation_agent = OrderAggregationAgent(config=config)
+    code_health_agent = CodeHealthAgent(config=config)
+
     # Initialize scheduler
     scheduler = AsyncIOScheduler()
 
-    # Schedule Market Research Agent
-    market_research = MarketResearchAgent(config=config)
-    scheduler.add_job(
-        market_research.run,
-        CronTrigger(hour=8),
-        name='market_research'
-    )
-
-    # Schedule Audience Segmentation Agent
-    audience_segmentation = AudienceSegmentationAgent(config=config)
-    scheduler.add_job(
-        audience_segmentation.run,
-        CronTrigger(hour=0, minute=30),
-        name='audience_segmentation'
-    )
-
     # Schedule Order Aggregation Agent
-    order_aggregation = OrderAggregationAgent(config=config)
     scheduler.add_job(
-        order_aggregation.run,
+        order_aggregation_agent.run,
         IntervalTrigger(minutes=5),
         name='order_aggregation'
     )
 
-    # ... schedule other agents
+    # Schedule Code Health Agent
+    scheduler.add_job(
+        code_health_agent.run,
+        IntervalTrigger(hours=1),
+        name='code_health'
+    )
 
     return scheduler
 
 async def webhook_handler(request):
-    """Handle incoming webhooks for GitHub pushes and order notifications"""
+    """Handle incoming webhooks"""
     data = await request.json()
+    
     if 'github' in request.path:
-        # Handle GitHub webhook
-        asyncio.create_task(code_health_agent.handle_push(data))
+        await code_health_agent.handle_push(data)
     elif 'orders' in request.path:
-        # Handle order webhook
-        asyncio.create_task(order_aggregation_agent.handle_order(data))
+        await order_aggregation_agent.handle_order(data)
+    
     return web.Response(text="Webhook received")
 
 async def main():
