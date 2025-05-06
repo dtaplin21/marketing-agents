@@ -49,6 +49,19 @@ async def setup_scheduler():
         name='code_health'
     )
 
+    # Configure jobs
+    scheduler.add_job(
+        'agents.market_research:MarketResearchAgent.run',
+        CronTrigger(hour=8),  # daily @ 08:00
+        id='market_research'
+    )
+
+    scheduler.add_job(
+        'agents.audience_segmentation:AudienceSegmentationAgent.run',
+        CronTrigger(hour=0, minute=30),  # daily @ 00:30
+        id='audience_segmentation'
+    )
+
     return scheduler
 
 async def webhook_handler(request):

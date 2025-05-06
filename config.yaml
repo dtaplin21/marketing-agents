@@ -1,7 +1,12 @@
 api_keys:
-  twitter: "your_twitter_api_key"
-  instagram: "your_instagram_api_key"
-  shopify: "your_shopify_api_key"
+  twitter:
+    api_key: ""
+    api_secret: ""
+  instagram:
+    access_token: ""
+  shopify:
+    api_key: ""
+    shop_url: ""
   google_analytics: "your_ga_api_key"
 
 agents:
@@ -35,4 +40,19 @@ logging:
 guardrails:
   rate_limits:
     twitter_posts_per_hour: 5
-    instagram_posts_per_day: 10 
+    instagram_posts_per_day: 10
+
+schedules:
+  market_research: "0 8 * * *"  # daily @ 08:00
+  audience_segmentation: "30 0 * * *"  # daily @ 00:30
+  # ... other schedules
+
+feature_flags:
+  enable_auto_posting: true
+  enable_auto_replies: true
+  # ... other flags
+
+limits:
+  twitter_char_limit: 280
+  instagram_caption_limit: 2200
+  # ... other limits 
