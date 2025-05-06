@@ -1,0 +1,30 @@
+marketing_agents/
+├── agents/
+│   ├── __init__.py
+│   ├── base.py
+│   ├── market_research.py
+│   ├── audience_segmentation.py
+│   ├── content_creation.py
+│   ├── social_posting.py
+│   ├── order_aggregation.py
+│   ├── analytics_optimization.py
+│   ├── customer_support.py
+│   └── code_health.py
+├── tools/
+│   ├── __init__.py
+│   ├── web_search.py
+│   ├── crm.py
+│   ├── social_media.py
+│   ├── ecommerce.py
+│   ├── analytics.py
+│   ├── support.py
+│   └── github.py
+├── runners/
+│   ├── __init__.py
+│   └── scheduler.py
+├── utils/
+│   ├── __init__.py
+│   ├── logging.py
+│   └── validation.py
+├── config.yaml
+└── requirements.txt 

@@ -1,0 +1,38 @@
+api_keys:
+  twitter: "your_twitter_api_key"
+  instagram: "your_instagram_api_key"
+  shopify: "your_shopify_api_key"
+  google_analytics: "your_ga_api_key"
+
+agents:
+  market_research:
+    enabled: true
+    schedule: "0 8 * * *"
+    tools:
+      - web_search_tool
+      - file_search_tool
+
+  audience_segmentation:
+    enabled: true
+    schedule: "30 0 * * *"
+    tools:
+      - crm_tool
+
+  content_creation:
+    enabled: true
+    max_retries: 3
+    character_limits:
+      twitter: 280
+      instagram: 2200
+      tiktok: 150
+
+# ... other agent configs
+
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+guardrails:
+  rate_limits:
+    twitter_posts_per_hour: 5
+    instagram_posts_per_day: 10 
