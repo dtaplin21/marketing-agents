@@ -3,6 +3,7 @@ import { Command } from 'cmdk';
 import { Dialog } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import * as React from 'react';
 
 export const CommandPalette: FC = () => {
   const [open, setOpen] = useState(false);
