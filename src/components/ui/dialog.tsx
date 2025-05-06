@@ -7,7 +7,10 @@ interface DialogProps {
   onOpenChange?: (open: boolean) => void
 }
 
-export function Dialog({ children, open, onOpenChange }: DialogProps) {
+export { Dialog }
+export type { DialogProps }
+
+function Dialog({ children, open, onOpenChange }: DialogProps) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
