@@ -55,4 +55,69 @@ feature_flags:
 limits:
   twitter_char_limit: 280
   instagram_caption_limit: 2200
-  # ... other limits 
+  # ... other limits
+
+cost_management:
+  alerts:
+    email: "admin@example.com"
+    slack_channel: "#cost-alerts"
+  thresholds:
+    warning: 0.8  # Alert at 80% of limit
+    critical: 0.95  # Alert at 95% of limit
+  
+  api_costs:
+    web_search:
+      cost_per_query: 0.01
+      daily_quota: 1000
+    
+    social_media:
+      twitter:
+        cost_per_request: 0.005
+        daily_post_limit: 100
+      instagram:
+        cost_per_request: 0.008
+        daily_post_limit: 50
+      tiktok:
+        cost_per_request: 0.01
+        daily_post_limit: 20
+      youtube:
+        cost_per_request: 0.015
+        daily_upload_limit: 10
+    
+    analytics:
+      cost_per_report: 0.05
+      daily_report_limit: 100
+    
+    crm:
+      cost_per_operation: 0.002
+      daily_operation_limit: 5000
+    
+    market_research:
+      cost_per_analysis: 0.1
+      bi_weekly_limit: 10
+
+  cost_limits:
+    monthly_max: 1000
+    daily_max: 50
+    service_limits:
+      web_search: 200
+      social_media: 300
+      analytics: 100
+      crm: 200
+      market_research: 200
+
+scraping_costs:
+  web_search:
+    cost_per_query: 0.01
+  social_media:
+    cost_per_request: 0.005
+  market_research:
+    cost_per_analysis: 0.1
+
+scraping_schedules:
+  market_research:
+    days: [1, 15]    # 1st and 15th of each month
+    hour: 3          # 3 AM
+  audience_segmentation:
+    days: [8, 22]    # 8th and 22nd of each month
+    hour: 3          # 3 AM 

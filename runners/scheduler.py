@@ -14,15 +14,17 @@ from agents import (
     OrderAggregationAgent,
     AnalyticsOptimizationAgent,
     CustomerSupportAgent,
-    CodeHealthAgent
+    CodeHealthAgent,
+    CostTrackingAgent
 )
 
 # Initialize agents at module level for webhook access
 order_aggregation_agent = None
 code_health_agent = None
+cost_tracking_agent = None
 
 async def setup_scheduler():
-    global order_aggregation_agent, code_health_agent
+    global order_aggregation_agent, code_health_agent, cost_tracking_agent
     
     # Load config
     with open('config.yaml', 'r') as f:
@@ -31,9 +33,30 @@ async def setup_scheduler():
     # Initialize agents
     order_aggregation_agent = OrderAggregationAgent(config=config)
     code_health_agent = CodeHealthAgent(config=config)
+    cost_tracking_agent = CostTrackingAgent(config=config)
 
     # Initialize scheduler
     scheduler = AsyncIOScheduler()
+
+    # Schedule bi-weekly scraping jobs (alternate weeks for different data types)
+    scheduler.add_job(
+        MarketResearchAgent(config).run,
+        CronTrigger(day='1,15', hour=3),  # Run 1st and 15th of each month at 3 AM
+        name='market_research'
+    )
+
+    scheduler.add_job(
+        AudienceSegmentationAgent(config).run,
+        CronTrigger(day='8,22', hour=3),  # Run 8th and 22nd of each month at 3 AM
+        name='audience_segmentation'
+    )
+
+    # Schedule daily cost tracking
+    scheduler.add_job(
+        cost_tracking_agent.run,
+        CronTrigger(hour=0),  # Run at midnight
+        name='cost_tracking'
+    )
 
     # Schedule Order Aggregation Agent
     scheduler.add_job(
@@ -47,19 +70,6 @@ async def setup_scheduler():
         code_health_agent.run,
         IntervalTrigger(hours=1),
         name='code_health'
-    )
-
-    # Configure jobs
-    scheduler.add_job(
-        'agents.market_research:MarketResearchAgent.run',
-        CronTrigger(hour=8),  # daily @ 08:00
-        id='market_research'
-    )
-
-    scheduler.add_job(
-        'agents.audience_segmentation:AudienceSegmentationAgent.run',
-        CronTrigger(hour=0, minute=30),  # daily @ 00:30
-        id='audience_segmentation'
     )
 
     return scheduler
