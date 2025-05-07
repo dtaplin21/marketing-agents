@@ -5,7 +5,7 @@ import logging
 
 class LinterTool:
     """Tool for code linting operations"""
-    def __init__(self):
+    def __init__(self, config):
         pass
 
     async def run_linter(self) -> Dict[str, Any]:

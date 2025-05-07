@@ -7,6 +7,8 @@ from .content_creation import ContentCreationAgent
 from .order_aggregation import OrderAggregationAgent
 from .analytics_optimization import AnalyticsOptimizationAgent
 from .customer_support import CustomerSupportAgent
+from .cost_tracking_agent import CostTrackingAgent
+
 
 __all__ = [
     'BaseAgent',
@@ -17,5 +19,6 @@ __all__ = [
     'OrderAggregationAgent',
     'AnalyticsOptimizationAgent',
     'CustomerSupportAgent',
-    'CodeHealthAgent'
+    'CodeHealthAgent',
+    'CostTrackingAgent',
 ] 

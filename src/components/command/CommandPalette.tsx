@@ -1,5 +1,4 @@
-/*eslint-disable*/
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Command } from 'cmdk';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,18 @@ import * as React from 'react';
 
 export const CommandPalette: FC = () => {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -23,14 +34,26 @@ export const CommandPalette: FC = () => {
           <Command.List className="max-h-[300px] overflow-y-auto overflow-x-hidden">
             <Command.Empty>No results found.</Command.Empty>
             <Command.Group heading="Actions">
-              <Command.Item>Analyze Customer Segment</Command.Item>
-              <Command.Item>Generate Social Post</Command.Item>
-              <Command.Item>Run Health Check</Command.Item>
+              <Command.Item onSelect={() => console.log('Analyze')}>
+                Analyze Customer Segment
+              </Command.Item>
+              <Command.Item onSelect={() => console.log('Generate')}>
+                Generate Social Post
+              </Command.Item>
+              <Command.Item onSelect={() => console.log('Health')}>
+                Run Health Check
+              </Command.Item>
             </Command.Group>
             <Command.Group heading="Navigation">
-              <Command.Item>Go to Segments</Command.Item>
-              <Command.Item>Go to Communications</Command.Item>
-              <Command.Item>Go to Analytics</Command.Item>
+              <Command.Item onSelect={() => console.log('Segments')}>
+                Go to Segments
+              </Command.Item>
+              <Command.Item onSelect={() => console.log('Communications')}>
+                Go to Communications
+              </Command.Item>
+              <Command.Item onSelect={() => console.log('Analytics')}>
+                Go to Analytics
+              </Command.Item>
             </Command.Group>
           </Command.List>
         </Command>
