@@ -3,9 +3,9 @@ import useSWR from 'swr';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
+  CardDescription as Description
 } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { Segment } from '@/types';
