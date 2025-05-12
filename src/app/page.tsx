@@ -3,8 +3,8 @@ import { CommandPalette } from '@/components/command/CommandPalette'
 
 export default function Home() {
   return (
-    <main>
+    <div className="min-h-screen">
       <CommandPalette />
-    </main>
+    </div>
   )
 } 
