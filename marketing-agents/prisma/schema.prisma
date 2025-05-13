@@ -1,0 +1,10 @@
+model PlatformConfig {
+  id         String   @id @default(cuid())
+  platformId String
+  userId     String
+  config     Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([platformId, userId])
+} 

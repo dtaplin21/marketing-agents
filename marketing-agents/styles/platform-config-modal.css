@@ -1,0 +1,130 @@
+.platform-config-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.config-container {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  background: var(--background-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.config-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.platform-icon {
+  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg-secondary);
+  border-radius: 12px;
+}
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-field input {
+  padding: 0.75rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-light);
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.test-button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.test-button.testing {
+  background: var(--warning-color);
+  color: white;
+}
+
+.test-button.success {
+  background: var(--success-color);
+  color: white;
+}
+
+.test-button.error {
+  background: var(--error-color);
+  color: white;
+}
+
+.main-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.cancel-button {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--card-bg-secondary);
+  color: var(--text-light);
+  border-radius: 6px;
+}
+
+.connect-button {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.connect-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+} 

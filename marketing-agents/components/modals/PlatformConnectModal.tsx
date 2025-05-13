@@ -4,6 +4,16 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { PlatformConfigModal } from './PlatformConfigModal';
+
+interface PlatformConfig {
+  apiKey?: string;
+  apiSecret?: string;
+  accessToken?: string;
+  accountId?: string;
+  websiteUrl?: string;
+  username?: string;
+}
 
 interface Platform {
   id: string;
@@ -11,6 +21,9 @@ interface Platform {
   icon: string;
   isConnected: boolean;
   type: 'social' | 'website' | 'analytics';
+  validationRules?: {
+    [key: string]: (value: string) => boolean;
+  };
 }
 
 interface AIResponse {
@@ -24,7 +37,7 @@ interface PlatformConnectModalProps {
   onClose: () => void;
 }
 
-export function PlatformConnectModal({ onClose }: PlatformConnectModalProps) {
+export const PlatformConnectModal = ({ onClose }: PlatformConnectModalProps) => {
   const [platforms, setPlatforms] = useState<Platform[]>([
     {
       id: 'twitter',
@@ -66,12 +79,10 @@ export function PlatformConnectModal({ onClose }: PlatformConnectModalProps) {
   const [query, setQuery] = useState('');
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [configuringPlatform, setConfiguringPlatform] = useState<Platform | null>(null);
 
-  const handleConnect = async (platformId: string) => {
-    // Here you would implement actual platform connection logic
-    setPlatforms(platforms.map(p => 
-      p.id === platformId ? { ...p, isConnected: !p.isConnected } : p
-    ));
+  const handlePlatformClick = (platform: Platform) => {
+    setConfiguringPlatform(platform);
   };
 
   const handleAIQuery = async (e: React.FormEvent) => {
@@ -117,7 +128,7 @@ export function PlatformConnectModal({ onClose }: PlatformConnectModalProps) {
                   <p>{platform.type}</p>
                 </div>
                 <Button
-                  onClick={() => handleConnect(platform.id)}
+                  onClick={() => handlePlatformClick(platform)}
                   className={`platform-button ${platform.isConnected ? 'connected' : ''}`}
                 >
                   {platform.isConnected ? 'Connected' : 'Connect'}
@@ -169,6 +180,34 @@ export function PlatformConnectModal({ onClose }: PlatformConnectModalProps) {
           )}
         </CardContent>
       </Card>
+
+      {configuringPlatform && (
+        <PlatformConfigModal
+          platform={configuringPlatform}
+          onClose={() => setConfiguringPlatform(null)}
+          onConnect={async (platformId, config) => {
+            try {
+              const response = await fetch('/api/store-platform-config', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ platformId, config }),
+              });
+
+              if (!response.ok) throw new Error('Failed to store configuration');
+
+              setPlatforms(platforms.map(p => 
+                p.id === platformId ? { ...p, isConnected: true } : p
+              ));
+              
+              setConfiguringPlatform(null);
+            } catch (error) {
+              console.error('Failed to connect platform:', error);
+            }
+          }}
+        />
+      )}
     </div>
   );
-} 
+}; 
