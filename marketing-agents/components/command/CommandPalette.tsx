@@ -11,29 +11,48 @@ interface Agent {
   description: string;
   icon: string;
   type: string;
+  capabilities: string[];
 }
 
 const agents: Agent[] = [
   {
-    id: 'analyst',
-    name: 'Quantum Analysis Engine',
-    description: 'Neural processing for advanced data analysis',
-    icon: '🧠',
-    type: 'Cognitive Analysis'
+    id: 'order_aggregation',
+    name: 'Order Aggregation Agent',
+    description: 'Processes and aggregates order data from multiple sources',
+    icon: '📊',
+    type: 'Data Processing',
+    capabilities: [
+      'Aggregate orders from multiple sources',
+      'Process order data',
+      'Generate order summaries',
+      'Track order patterns'
+    ]
   },
   {
-    id: 'social',
-    name: 'Social Intelligence Matrix',
-    description: 'Advanced social pattern recognition',
-    icon: '🌐',
-    type: 'Social Cognition'
+    id: 'market_analysis',
+    name: 'Market Analysis Agent',
+    description: 'Analyzes market trends and customer behavior',
+    icon: '📈',
+    type: 'Analysis',
+    capabilities: [
+      'Market trend analysis',
+      'Customer behavior tracking',
+      'Competitive analysis',
+      'Market opportunity detection'
+    ]
   },
   {
-    id: 'health',
-    name: 'System Synapse Monitor',
-    description: 'Real-time neural network monitoring',
-    icon: '⚡',
-    type: 'System Intelligence'
+    id: 'trend_detection',
+    name: 'Trend Detection Agent',
+    description: 'Identifies emerging trends and patterns in data',
+    icon: '🔍',
+    type: 'Analysis',
+    capabilities: [
+      'Pattern recognition',
+      'Trend identification',
+      'Anomaly detection',
+      'Predictive analytics'
+    ]
   }
 ];
 
@@ -56,74 +75,88 @@ export const CommandPalette = () => {
   };
 
   return (
-    <div className="command-container">
+    <div className="agent-dashboard">
       <div className="agent-grid">
         {agents.map((agent) => (
-          <Card key={agent.id} className="agent-card" onClick={() => setSelectedAgent(agent.id)}>
-            <div className="agent-header">
+          <Card 
+            key={agent.id} 
+            className="agent-card"
+            onClick={() => setSelectedAgent(agent.id)}
+          >
+            <CardHeader className="agent-header">
               <div className="agent-header-content">
                 <span className="agent-icon">{agent.icon}</span>
-                <h3 className="agent-name">{agent.name}</h3>
+                <CardTitle className="agent-name">{agent.name}</CardTitle>
               </div>
-            </div>
-            <div className="agent-body">
+            </CardHeader>
+            <CardContent className="agent-content">
               <div className="agent-type">{agent.type}</div>
               <p className="agent-description">{agent.description}</p>
-              <div className="agent-status">
-                <span className="status-label">Neural Status:</span>
-                <span className="status-value">ACTIVE</span>
+              <div className="agent-capabilities">
+                <h4>Capabilities:</h4>
+                <ul>
+                  {agent.capabilities.map((capability, index) => (
+                    <li key={index}>{capability}</li>
+                  ))}
+                </ul>
               </div>
-            </div>
+              <div className="agent-status">
+                <span>Status:</span>
+                <span className="status-active">Ready</span>
+              </div>
+            </CardContent>
           </Card>
         ))}
       </div>
 
-      <Card className="query-card">
-        <div className="query-container">
-          <form onSubmit={handleSubmit} className="query-form">
+      <Card className="command-interface">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="command-form">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Interface with ${agents.find(a => a.id === selectedAgent)?.name}...`}
-              className="query-input"
+              placeholder={`Send command to ${agents.find(a => a.id === selectedAgent)?.name}...`}
+              className="command-input"
             />
-            <Button type="submit" className="query-button">Execute</Button>
+            <Button type="submit" className="command-button">
+              Execute Command
+            </Button>
           </form>
-        </div>
+        </CardContent>
       </Card>
 
-      <Card className="updates-card">
-        <div className="updates-header">
-          <h3 className="updates-title">Neural Activity Log</h3>
-        </div>
-        <div className="updates-body">
+      <Card className="activity-log">
+        <CardHeader>
+          <CardTitle>Agent Activity Log</CardTitle>
+        </CardHeader>
+        <CardContent>
           {updates.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">🧠</div>
-              <p className="empty-text">Neural network awaiting input signals...</p>
+            <div className="empty-log">
+              <div className="empty-icon">🤖</div>
+              <p>No agent activity yet. Send a command to get started.</p>
             </div>
           ) : (
-            <div className="updates-list">
+            <div className="activity-list">
               {updates.map((update, index) => {
                 const agent = agents.find(a => a.id === update.agent);
                 return (
-                  <div key={index} className="update-item">
-                    <div className="update-icon">{agent?.icon}</div>
-                    <div className="update-content">
-                      <div className="update-header">
-                        <h4 className="update-agent">{agent?.name}</h4>
-                        <span className="update-time">
+                  <div key={index} className="activity-item">
+                    <div className="activity-icon">{agent?.icon}</div>
+                    <div className="activity-content">
+                      <div className="activity-header">
+                        <h4 className="activity-agent">{agent?.name}</h4>
+                        <span className="activity-time">
                           {update.timestamp.toLocaleString()}
                         </span>
                       </div>
-                      <p className="update-message">{update.message}</p>
+                      <p className="activity-message">{update.message}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
           )}
-        </div>
+        </CardContent>
       </Card>
     </div>
   );

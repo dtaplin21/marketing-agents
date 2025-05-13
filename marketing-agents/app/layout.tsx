@@ -1,5 +1,7 @@
 import '../styles/main.css';
 import '../styles/components.css';
+import '../styles/order-aggregation.css';
+import '../styles/platform-modal.css';
 
 export const metadata = {
   title: 'Marketing Agents',
