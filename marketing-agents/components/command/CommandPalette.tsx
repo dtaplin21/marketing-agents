@@ -8,43 +8,39 @@ import { Button } from '../ui/button';
 interface Agent {
   id: string;
   name: string;
-  color: string;
-  bgColor: string;
   description: string;
   icon: string;
+  type: string;
 }
 
 const agents: Agent[] = [
   {
     id: 'analyst',
-    name: 'Data Analyst',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500',
-    description: 'Analyzes customer segments and provides insights',
-    icon: '📊'
+    name: 'Quantum Analysis Engine',
+    description: 'Neural processing for advanced data analysis',
+    icon: '🧠',
+    type: 'Cognitive Analysis'
   },
   {
     id: 'social',
-    name: 'Social Media',
-    color: 'text-purple-500',
-    bgColor: 'bg-purple-500',
-    description: 'Generates and manages social media content',
-    icon: '🌐'
+    name: 'Social Intelligence Matrix',
+    description: 'Advanced social pattern recognition',
+    icon: '🌐',
+    type: 'Social Cognition'
   },
   {
     id: 'health',
-    name: 'System Health',
-    color: 'text-green-500',
-    bgColor: 'bg-green-500',
-    description: 'Monitors system performance and health',
-    icon: '🏥'
+    name: 'System Synapse Monitor',
+    description: 'Real-time neural network monitoring',
+    icon: '⚡',
+    type: 'System Intelligence'
   }
 ];
 
 export const CommandPalette = () => {
   const [selectedAgent, setSelectedAgent] = useState(agents[0].id);
   const [query, setQuery] = useState('');
-  const [updates, setUpdates] = useState<Array<{ agent: string, message: string, timestamp: Date }>>([]);
+  const [updates, setUpdates] = useState<Array<{ agent: string; message: string; timestamp: Date }>>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,72 +56,74 @@ export const CommandPalette = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Agent Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="command-container">
+      <div className="agent-grid">
         {agents.map((agent) => (
-          <Card key={agent.id} className="hover:shadow-lg transition-all duration-200">
-            <CardHeader className={`${agent.bgColor} text-white rounded-t-lg`}>
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{agent.icon}</span>
-                <CardTitle>{agent.name}</CardTitle>
+          <Card key={agent.id} className="agent-card" onClick={() => setSelectedAgent(agent.id)}>
+            <div className="agent-header">
+              <div className="agent-header-content">
+                <span className="agent-icon">{agent.icon}</span>
+                <h3 className="agent-name">{agent.name}</h3>
               </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <p className="text-gray-600 mb-4">{agent.description}</p>
-              <div className="text-sm text-gray-500">Waiting for data...</div>
-            </CardContent>
+            </div>
+            <div className="agent-body">
+              <div className="agent-type">{agent.type}</div>
+              <p className="agent-description">{agent.description}</p>
+              <div className="agent-status">
+                <span className="status-label">Neural Status:</span>
+                <span className="status-value">ACTIVE</span>
+              </div>
+            </div>
           </Card>
         ))}
       </div>
 
-      {/* Query Input */}
-      <Card>
-        <CardContent className="p-6">
-          <form onSubmit={handleSubmit} className="flex gap-3">
+      <Card className="query-card">
+        <div className="query-container">
+          <form onSubmit={handleSubmit} className="query-form">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ask any AI agent a question..."
-              className="flex-1"
+              placeholder={`Interface with ${agents.find(a => a.id === selectedAgent)?.name}...`}
+              className="query-input"
             />
-            <Button type="submit">Send Query</Button>
+            <Button type="submit" className="query-button">Execute</Button>
           </form>
-        </CardContent>
+        </div>
       </Card>
 
-      {/* Updates Feed */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Updates</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <Card className="updates-card">
+        <div className="updates-header">
+          <h3 className="updates-title">Neural Activity Log</h3>
+        </div>
+        <div className="updates-body">
           {updates.length === 0 ? (
-            <div className="text-center text-gray-500 py-8">
-              No updates yet. Start by asking a question.
+            <div className="empty-state">
+              <div className="empty-icon">🧠</div>
+              <p className="empty-text">Neural network awaiting input signals...</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="updates-list">
               {updates.map((update, index) => {
                 const agent = agents.find(a => a.id === update.agent);
                 return (
-                  <div key={index} className="flex gap-3 pb-4 border-b last:border-0">
-                    <div className={`h-10 w-10 rounded-full ${agent?.bgColor} flex items-center justify-center text-white flex-shrink-0`}>
-                      {agent?.icon}
-                    </div>
-                    <div>
-                      <p className="font-medium">{agent?.name}</p>
-                      <p className="text-sm text-gray-600">{update.message}</p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {update.timestamp.toLocaleString()}
-                      </p>
+                  <div key={index} className="update-item">
+                    <div className="update-icon">{agent?.icon}</div>
+                    <div className="update-content">
+                      <div className="update-header">
+                        <h4 className="update-agent">{agent?.name}</h4>
+                        <span className="update-time">
+                          {update.timestamp.toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="update-message">{update.message}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

@@ -1,5 +1,5 @@
-import React from 'react'
-import '../globals.css'
+import '../styles/main.css';
+import '../styles/components.css';
 
 export const metadata = {
   title: 'Marketing Agents',
@@ -15,5 +15,5 @@ export default function RootLayout({
     <html lang="en">
       <body>{children}</body>
     </html>
-  )
+  );
 }

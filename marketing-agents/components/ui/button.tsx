@@ -1,33 +1,23 @@
-"use client"
-
 import * as React from "react"
-import { cn } from "../../lib/utils"
+import { Slot } from "@radix-ui/react-slot"
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'outline' | 'ghost'
-  size?: 'default' | 'sm' | 'lg'
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean;
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'default' | 'sm' | 'lg';
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'default', size = 'default', ...props }, ref) => {
+  ({ className, variant = 'default', size = 'default', asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    const baseClass = 'button';
+    const variantClass = `button-${variant}`;
+    const sizeClass = `button-${size}`;
+    const classes = [baseClass, variantClass, sizeClass, className].filter(Boolean).join(' ');
+
     return (
-      <button
-        className={cn(
-          "inline-flex items-center justify-center rounded-md font-medium transition-colors",
-          "disabled:opacity-50 disabled:pointer-events-none",
-          {
-            'default': 'bg-primary text-primary-foreground hover:bg-primary/90',
-            'outline': 'border border-input hover:bg-accent hover:text-accent-foreground',
-            'ghost': 'hover:bg-accent hover:text-accent-foreground'
-          }[variant],
-          {
-            'default': 'h-10 py-2 px-4',
-            'sm': 'h-9 px-3',
-            'lg': 'h-11 px-8'
-          }[size],
-          className
-        )}
+      <Comp
+        className={classes}
         ref={ref}
         {...props}
       />

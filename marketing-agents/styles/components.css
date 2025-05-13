@@ -1,0 +1,242 @@
+/* Command Palette specific styles */
+.command-palette {
+  padding: 1.5rem;
+}
+
+.agent-icon {
+  font-size: 1.5rem;
+}
+
+.agent-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+}
+
+.agent-type {
+  font-size: 0.875rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.agent-description {
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.agent-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.status-active {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.command-input {
+  margin: 1.5rem 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.update-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #374151;
+}
+
+.update-icon {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  background: linear-gradient(to bottom right, #2563eb, #3b82f6);
+  border-radius: 0.5rem;
+}
+
+.update-content {
+  flex: 1;
+}
+
+.update-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.update-agent {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.update-time {
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.update-message {
+  color: #d1d5db;
+}
+
+/* Card styles */
+.card {
+  background: #1f2937;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #374151;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.card-description {
+  color: #9ca3af;
+  margin-top: 0.5rem;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #374151;
+}
+
+/* Button base styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+/* Button variants */
+.button-default {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.button-default:hover {
+  background-color: #2563eb;
+}
+
+.button-outline {
+  background-color: transparent;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.button-outline:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.button-ghost {
+  background-color: transparent;
+  border: none;
+  color: #374151;
+}
+
+.button-ghost:hover {
+  background-color: #f3f4f6;
+}
+
+/* Button sizes */
+.button-default {
+  padding: 8px 16px;
+  height: 40px;
+}
+
+.button-sm {
+  padding: 6px 12px;
+  height: 36px;
+  font-size: 14px;
+}
+
+.button-lg {
+  padding: 10px 20px;
+  height: 44px;
+  font-size: 16px;
+}
+
+/* Disabled state */
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Tabs styles */
+.tabs-list {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background-color: #f3f4f6;
+  padding: 4px;
+}
+
+.tabs-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 4px;
+  padding: 0 12px;
+  height: 32px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.tabs-trigger[data-state="active"] {
+  background-color: white;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tabs-trigger:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.tabs-trigger[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tabs-content {
+  margin-top: 8px;
+}
+
+.tabs-content:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+} 
