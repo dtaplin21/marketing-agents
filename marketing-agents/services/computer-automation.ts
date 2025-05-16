@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { Logger } from './logger';
+import { AIOrchestrator } from './ai-orchestration';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,54 +17,44 @@ interface AutomationResult {
   credentials?: Record<string, string>;
   error?: string;
   logs?: string[];
+  marketingStrategy?: string;
 }
 
 export class ComputerAutomationService {
   private logger: Logger;
   private retryAttempts = 3;
+  private aiOrchestrator: AIOrchestrator;
 
   constructor() {
     this.logger = new Logger('ComputerAutomation');
+    this.aiOrchestrator = new AIOrchestrator();
   }
 
   public async executeComputerTask(task: AutomationTask): Promise<AutomationResult> {
-    let attempts = 0;
-    
-    while (attempts < this.retryAttempts) {
-      try {
-        this.logger.log(`Attempting ${task.action} for ${task.platformId} (Attempt ${attempts + 1})`);
+    try {
+      // Analyze the task with Gemma
+      const analysis = await this.aiOrchestrator.processTask({
+        type: 'analyze',
+        input: task
+      });
 
-        const response = await openai.chat.completions.create({
-          model: "gpt-4-vision-preview",
-          messages: [
-            {
-              role: "user",
-              content: this.generatePrompt(task),
-            }
-          ],
-          max_tokens: 4096,
-        });
+      // Generate optimal configuration
+      const config = await this.generateOptimalConfig(task.platformId);
 
-        const result = this.processResponse(response, task);
-        
-        if (result.success) {
-          this.logger.log(`Successfully completed ${task.action} for ${task.platformId}`);
-          return result;
-        }
+      // Execute the task with the Computer Use tool
+      const result = await this.executeWithComputerUse(task, config);
 
-        attempts++;
-        this.logger.warn(`Attempt ${attempts} failed, retrying...`);
-      } catch (error) {
-        this.logger.error(`Error in ${task.action} for ${task.platformId}:`, error);
-        attempts++;
+      // If successful, generate marketing strategy
+      if (result.success) {
+        const strategy = await this.generateMarketingStrategy(result);
+        result.marketingStrategy = strategy.data || '';
       }
-    }
 
-    return {
-      success: false,
-      error: `Failed after ${this.retryAttempts} attempts`,
-      logs: this.logger.getLogs()
-    };
+      return result;
+    } catch (error) {
+      this.logger.error('Task execution failed:', error);
+      throw error;
+    }
   }
 
   private platformTasks = {
@@ -198,6 +189,69 @@ export class ComputerAutomationService {
       return { success: true, logs: [content] };
     } catch (error) {
       return { success: false, error: 'Failed to process response' };
+    }
+  }
+
+  private async analyzeCredentials(credentials: Record<string, string>) {
+    return this.aiOrchestrator.processTask({
+      type: 'analyze',
+      input: credentials
+    });
+  }
+
+  private async generateOptimalConfig(platform: string) {
+    return this.aiOrchestrator.processTask({
+      type: 'generate',
+      input: {
+        platform,
+        task: 'configuration'
+      }
+    });
+  }
+
+  private async generateMarketingStrategy(platformData: any) {
+    return this.aiOrchestrator.processTask({
+      type: 'generate',
+      input: platformData
+    });
+  }
+
+  private async executeWithComputerUse(task: AutomationTask, config: any): Promise<AutomationResult> {
+    // Implementation of executeWithComputerUse method
+    // This method should return the result of executing the task with the Computer Use tool
+    // based on the provided config
+    throw new Error('Method not implemented');
+  }
+
+  async monitorPlatform(platformId: string, metrics: string[]): Promise<any> {
+    try {
+      const result = await this.aiOrchestrator.processTask({
+        type: 'monitor',
+        input: {
+          platformId,
+          metrics
+        }
+      });
+      return result;
+    } catch (error) {
+      this.logger.error('Platform monitoring failed:', error);
+      throw error;
+    }
+  }
+
+  async recoverFromError(error: any, context: any): Promise<any> {
+    try {
+      const result = await this.aiOrchestrator.processTask({
+        type: 'recover',
+        input: {
+          error,
+          context
+        }
+      });
+      return result;
+    } catch (recoveryError) {
+      this.logger.error('Error recovery failed:', recoveryError);
+      throw recoveryError;
     }
   }
 } 

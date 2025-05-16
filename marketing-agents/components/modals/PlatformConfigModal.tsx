@@ -23,38 +23,20 @@ interface Platform {
 
 const automationService = new ComputerAutomationService();
 
-export const PlatformConfigModal = ({ 
-  platform, 
-  onClose, 
-  onConnect 
-}: { 
+interface PlatformConfigModalProps {
   platform: Platform;
   onClose: () => void;
   onConnect: (platformId: string, config: PlatformConfig) => Promise<void>;
+}
+
+export const PlatformConfigModal: React.FC<PlatformConfigModalProps> = ({ 
+  platform, 
+  onClose, 
+  onConnect 
 }) => {
   const [isAutomating, setIsAutomating] = useState(false);
   const [automationLogs, setAutomationLogs] = useState<string[]>([]);
-  const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (currentTaskId) {
-      interval = setInterval(async () => {
-        const status = await automationService.getTaskStatus(currentTaskId);
-        setAutomationLogs(status.logs);
-        
-        if (status.status === 'completed') {
-          clearInterval(interval);
-          setCurrentTaskId(null);
-        }
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [currentTaskId]);
+  const [monitoringData, setMonitoringData] = useState<any>(null);
 
   const handleAutoConnect = async () => {
     setIsAutomating(true);
@@ -65,10 +47,40 @@ export const PlatformConfigModal = ({
       });
 
       if (result.success && result.credentials) {
-        await onConnect(platform.id, result.credentials);
+        // Start monitoring
+        const monitoring = await automationService.monitorPlatform(
+          platform.id,
+          ['performance', 'errors', 'usage']
+        );
+
+        setMonitoringData(monitoring);
+
+        if (result.marketingStrategy) {
+          setAutomationLogs(prev => [
+            ...prev,
+            '🎯 Generated Marketing Strategy:',
+            ...(result.marketingStrategy as string).split('\n')
+          ]);
+        }
+
+        await onConnect(platform.id, result.credentials as PlatformConfig);
         onClose();
       } else {
         setAutomationLogs(result.logs || ['Automation failed']);
+        
+        // Attempt recovery
+        const recovery = await automationService.recoverFromError(
+          result.error,
+          { platform: platform.id }
+        );
+
+        if (recovery.recommendations) {
+          setAutomationLogs(prev => [
+            ...prev,
+            '🔄 Recovery Recommendations:',
+            ...recovery.recommendations
+          ]);
+        }
       }
     } catch (error) {
       console.error('Automation failed:', error);
@@ -104,6 +116,30 @@ export const PlatformConfigModal = ({
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {monitoringData && (
+              <div className="monitoring-data">
+                <h4>Platform Monitoring</h4>
+                <div className="metrics-grid">
+                  {Object.entries(monitoringData.data).map(([metric, value]) => (
+                    <div key={metric} className="metric-card">
+                      <h5>{metric}</h5>
+                      <p>{String(value)}</p>
+                    </div>
+                  ))}
+                </div>
+                {monitoringData.recommendations && (
+                  <div className="recommendations">
+                    <h5>Optimization Recommendations</h5>
+                    <ul>
+                      {monitoringData.recommendations.map((rec: string, i: number) => (
+                        <li key={i}>{rec}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
           </div>

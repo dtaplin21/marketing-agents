@@ -2,9 +2,7 @@ import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 import { encrypt } from '../../../utils/encryption';
 import { platformValidation } from '../../../utils/validation';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
